@@ -1,0 +1,35 @@
+{
+  "name": "iripvanwinkle/process-pool",
+  "description": "It is the pool container for symfony/process",
+  "keywords": [
+    "process",
+    "symfony",
+    "yii",
+    "extension",
+    "widget",
+    "pool"
+  ],
+  "type": "php-extension",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "iRipVanWinkle",
+      "email": "iripvanwinkle@gmail.com"
+    }
+  ],
+  "require": {
+    "symfony/process": "*",
+    "codeception/codeception": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "roboapp\\processpool\\": ""
+    }
+  },
+  "extra": {
+    "asset-installer-paths": {
+      "npm-asset-library": "vendor/npm",
+      "bower-asset-library": "vendor/bower"
+    }
+  }
+}
