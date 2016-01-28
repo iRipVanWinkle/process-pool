@@ -121,9 +121,11 @@ class ProcessPool
     {
         /** @var ProcessContainer $container */
         foreach ($this->_pool as $container) {
+            var_dump($container->getProcess()->isRunning());
             while ($container->getProcess()->isRunning()) {
-                usleep(1000);
+                sleep(1);
             }
+            var_dump($container->getProcess()->isRunning());
         }
     }
 
@@ -136,7 +138,7 @@ class ProcessPool
         /** @var ProcessContainer $container */
         foreach ($this->_pool as $container) {
             if (!$container->getProcess()->isRunning() && $container->getProcess()->getStatus() !== Process::STATUS_TERMINATED) {
-                $container->getProcess()->start($container->getCallback());
+                $container->getProcess()->start(function(){echo 123;});
                 $this->_running++;
             }
 
@@ -214,6 +216,9 @@ class ProcessPool
         $out = Process::OUT;
 
         $callback = function ($type, $data) use ($self, $callback, $out) {
+            var_dump($type);
+            var_dump($data);
+
             if ($out == $type) {
                 if ($this->deserializer) {
                     $data = call_user_func($this->deserializer, $data);
@@ -243,6 +248,7 @@ class ProcessPool
 
     public function processCompleted()
     {
+        echo "\n--- processCompleted ---\n";
         $this->_completed++;
         $this->_running--;
 

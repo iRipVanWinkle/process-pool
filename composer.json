@@ -18,7 +18,8 @@
     }
   ],
   "require": {
-    "symfony/process": "*"
+    "symfony/process": "*",
+    "phpunit/phpunit": "5.1.*"
   },
   "autoload": {
     "psr-4": {
