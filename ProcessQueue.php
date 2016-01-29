@@ -1,12 +1,12 @@
 <?php
 
-namespace roboapp\processpool;
+namespace roboapp\processqueue;
 
 use Closure;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
-class ProcessPool
+class ProcessQueue
 {
     /**
      * @var string
@@ -20,11 +20,11 @@ class ProcessPool
     public $limit = 10;
 
     /**
-     * @var array|boolean the functions used to unserialize process data returned. Defaults to false, meaning
+     * @var string|boolean the functions used to unserialize process data returned. Defaults to false, meaning
      * the data will be retrieved without any deserialization. If you want to use some more efficient
      * serializer (e.g. [igbinary](http://pecl.php.net/package/igbinary)), you may configure this property with
-     * a two-element array. The first element specifies the serialization function, and the second the deserialization
-     * function. If this property is set false, data will be retrieved without any deserialization.
+     * a string the deserialization function. If this property is set false, data will be retrieved without
+     * any deserialization.
      */
     public $deserializer = false;
 
@@ -95,10 +95,6 @@ class ProcessPool
      */
     public function __construct($cwd = null, array $env = null, $input = null, $timeout = 60, array $options = array())
     {
-        if (!function_exists('proc_open')) {
-            throw new RuntimeException('The Process class relies on proc_open, which is not available on your PHP installation.');
-        }
-
         $this->_cwd = $cwd;
         $this->_env = $env;
         $this->_input = $input;
@@ -121,11 +117,9 @@ class ProcessPool
     {
         /** @var ProcessContainer $container */
         foreach ($this->_pool as $container) {
-            var_dump($container->getProcess()->isRunning());
             while ($container->getProcess()->isRunning()) {
-                sleep(1);
+                usleep(1000);
             }
-            var_dump($container->getProcess()->isRunning());
         }
     }
 
@@ -138,7 +132,7 @@ class ProcessPool
         /** @var ProcessContainer $container */
         foreach ($this->_pool as $container) {
             if (!$container->getProcess()->isRunning() && $container->getProcess()->getStatus() !== Process::STATUS_TERMINATED) {
-                $container->getProcess()->start(function(){echo 123;});
+                $container->getProcess()->start($container->getCallback());
                 $this->_running++;
             }
 
@@ -173,21 +167,20 @@ class ProcessPool
      */
     public function clear()
     {
-        /** @var ProcessContainer $container */
-        foreach ($this->_pool as &$container) {
-            if ($container->getProcess()->isRunning()) {
-                throw new \ErrorException("One or more process is running.");
-            }
+        if ($this->isRunning()) {
+            throw new \ErrorException("One or more process is running.");
         }
 
         $this->_pool = [];
+        $this->_length = 0;
     }
 
     /**
      * @param $command
      * @param null $callback
      */
-    public function addCommand($command, $callback = null)
+    public
+    function addCommand($command, $callback = null)
     {
         $this->_pool[] = new ProcessContainer(
             $this->_buildProcess($command),
@@ -201,7 +194,8 @@ class ProcessPool
      * @param $command
      * @return Process
      */
-    private function _buildProcess($command)
+    private
+    function _buildProcess($command)
     {
         return new Process($command, $this->_cwd, $this->_env, $this->_input, $this->_timeout, $this->_options);
     }
@@ -210,15 +204,13 @@ class ProcessPool
      * @param Closure $callback
      * @return Closure
      */
-    private function _buildCallback($callback)
+    private
+    function _buildCallback($callback)
     {
         $self = $this;
         $out = Process::OUT;
 
         $callback = function ($type, $data) use ($self, $callback, $out) {
-            var_dump($type);
-            var_dump($data);
-
             if ($out == $type) {
                 if ($this->deserializer) {
                     $data = call_user_func($this->deserializer, $data);
@@ -241,14 +233,15 @@ class ProcessPool
      * Add error
      * @param $error
      */
-    protected function addError($error)
+    protected
+    function addError($error)
     {
         $this->_errors[] = $error;
     }
 
-    public function processCompleted()
+    public
+    function processCompleted()
     {
-        echo "\n--- processCompleted ---\n";
         $this->_completed++;
         $this->_running--;
 
@@ -261,7 +254,8 @@ class ProcessPool
      * Amount processes in pool
      * @return int
      */
-    public function getLength()
+    public
+    function getLength()
     {
         return $this->_length;
     }
@@ -269,7 +263,8 @@ class ProcessPool
     /**
      * @param $deserializer
      */
-    public function setDeserializer($deserializer)
+    public
+    function setDeserializer($deserializer)
     {
         $this->deserializer = $deserializer;
     }
@@ -277,7 +272,8 @@ class ProcessPool
     /**
      * @param $limit
      */
-    public function setLimit($limit)
+    public
+    function setLimit($limit)
     {
         $this->limit = $limit;
     }
@@ -286,19 +282,23 @@ class ProcessPool
      * @param Process $process
      * @param null $callback
      */
-    public function addProcess(Process $process, $callback = null)
+    public
+    function addProcess(Process $process, $callback = null)
     {
         $this->_pool[] = new ProcessContainer(
             $process,
             $this->_buildCallback($callback)
         );
+
+        $this->_length++;
     }
 
     /**
      * Error list
      * @return array
      */
-    public function getErrors()
+    public
+    function getErrors()
     {
         return $this->_errors;
     }
@@ -307,7 +307,8 @@ class ProcessPool
      * Amount processes completed
      * @return int
      */
-    public function getCompleted()
+    public
+    function getCompleted()
     {
         return $this->_completed;
     }
@@ -316,7 +317,8 @@ class ProcessPool
      * Amount processes running
      * @return int
      */
-    public function getRunning()
+    public
+    function getRunning()
     {
         return $this->_running;
     }

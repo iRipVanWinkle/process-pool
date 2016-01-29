@@ -1,6 +1,6 @@
 <?php
 
-namespace roboapp\processpool;
+namespace roboapp\processqueue;
 
 use Symfony\Component\Process\Process;
 

@@ -23,8 +23,11 @@
   },
   "autoload": {
     "psr-4": {
-      "roboapp\\processpool\\": ""
-    }
+      "roboapp\\processqueue\\": ""
+    },
+    "exclude-from-classmap": [
+      "/tests/"
+    ]
   },
   "extra": {
     "asset-installer-paths": {
