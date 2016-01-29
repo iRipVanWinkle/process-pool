@@ -1,12 +1,12 @@
 <?php
 
-namespace roboapp\processqueue;
+namespace roboapp\queueprocesses;
 
 use Closure;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
-class ProcessQueue
+class QueueProcesses
 {
     /**
      * @var string

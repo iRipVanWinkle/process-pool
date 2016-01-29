@@ -1,15 +1,15 @@
 <?php
 
-namespace roboapp\processqueue;
+namespace roboapp\queueprocesses;
 
 use Symfony\Component\Process\PhpProcess;
 
-class ProcessQueueTest extends \PHPUnit_Framework_TestCase
+class QueueProcessesTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testPoolInfo()
     {
-        $queue = new ProcessQueue();
+        $queue = new QueueProcesses();
         $queue->addCommand('echo foo');
         $queue->addCommand('echo bar');
 
@@ -35,7 +35,7 @@ class ProcessQueueTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessClear()
     {
-        $queue = new ProcessQueue();
+        $queue = new QueueProcesses();
         $queue->addProcess(new PhpProcess('<?= "foo" ?>'));
         $this->assertEquals(1, $queue->getLength());
         $queue->clear();
@@ -47,7 +47,7 @@ class ProcessQueueTest extends \PHPUnit_Framework_TestCase
      */
     public function testProcessClearException()
     {
-        $queue = new ProcessQueue();
+        $queue = new QueueProcesses();
         $queue->addCommand('echo foo');
         $queue->start();
 
@@ -56,7 +56,7 @@ class ProcessQueueTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessError()
     {
-        $queue = new ProcessQueue();
+        $queue = new QueueProcesses();
         $queue->addProcess(new PhpProcess('<?= "No exception"; ?>'));
         $queue->addProcess(new PhpProcess('<?php throw Exception("Exception"); ?>'));
 
@@ -69,7 +69,7 @@ class ProcessQueueTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessUseDeserializer()
     {
-        $queue = new ProcessQueue();
+        $queue = new QueueProcesses();
         $queue->setDeserializer('unserialize');
 
         $queue->addProcess(new PhpProcess("<?= serialize('foo'); ?>"), function ($type, $buffer) use (&$data) {
@@ -86,7 +86,7 @@ class ProcessQueueTest extends \PHPUnit_Framework_TestCase
 
     public function testProcessCallback()
     {
-        $queue = new ProcessQueue();
+        $queue = new QueueProcesses();
         $queue->addCommand('echo foo', function ($type, $buffer) use (&$data) {
             $data .= $buffer;
         });

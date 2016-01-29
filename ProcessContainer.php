@@ -1,6 +1,6 @@
 <?php
 
-namespace roboapp\processqueue;
+namespace roboapp\queueprocesses;
 
 
 class ProcessContainer

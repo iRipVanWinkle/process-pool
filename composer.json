@@ -1,6 +1,6 @@
 {
-  "name": "iripvanwinkle/process-pool",
-  "description": "It is the pool container for symfony/process",
+  "name": "iripvanwinkle/queue-processes",
+  "description": "It is the queue container for symfony/process",
   "keywords": [
     "process",
     "symfony",
@@ -23,7 +23,7 @@
   },
   "autoload": {
     "psr-4": {
-      "roboapp\\processqueue\\": ""
+      "roboapp\\queueprocesses\\": ""
     },
     "exclude-from-classmap": [
       "/tests/"
