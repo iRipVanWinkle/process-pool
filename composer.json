@@ -18,7 +18,7 @@
     }
   ],
   "require": {
-    "symfony/process": "*",
+    "symfony/process": "3.1.*",
     "phpunit/phpunit": "5.1.*"
   },
   "autoload": {
@@ -29,6 +29,10 @@
       "/tests/"
     ]
   },
+  "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage --coverage-xml"
+    }
   "extra": {
     "asset-installer-paths": {
       "npm-asset-library": "vendor/npm",
