@@ -30,9 +30,9 @@
     ]
   },
   "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage --coverage-xml"
-    }
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage --coverage-xml"
+  },
   "extra": {
     "asset-installer-paths": {
       "npm-asset-library": "vendor/npm",
