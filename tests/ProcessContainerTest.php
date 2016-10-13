@@ -6,10 +6,9 @@ use Symfony\Component\Process\Process;
 
 class ProcessContainerTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testProcessContainer()
     {
-        $process = new Process("sleep 1");
+        $process = new Process('sleep 1');
         $callback = function () {
         };
 
@@ -18,5 +17,4 @@ class ProcessContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($process, $class->getProcess());
         $this->assertEquals($callback, $class->getCallback());
     }
-
 }

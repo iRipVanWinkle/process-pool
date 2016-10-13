@@ -2,7 +2,6 @@
 
 namespace roboapp\queueprocesses;
 
-
 class ProcessContainer
 {
     /**
@@ -17,7 +16,7 @@ class ProcessContainer
 
     /**
      * @param \Symfony\Component\Process\Process $process
-     * @param \Closure $callback
+     * @param \Closure                           $callback
      */
     public function __construct($process, $callback)
     {
