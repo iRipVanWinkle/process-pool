@@ -14,17 +14,18 @@ class QueueProcesses
     public $commandName;
 
     /**
-     * Limit process is run
+     * Limit process is run.
+     *
      * @var int
      */
     public $limit = 10;
 
     /**
-     * @var string|boolean the functions used to unserialize process data returned. Defaults to false, meaning
-     * the data will be retrieved without any deserialization. If you want to use some more efficient
-     * serializer (e.g. [igbinary](http://pecl.php.net/package/igbinary)), you may configure this property with
-     * a string the deserialization function. If this property is set false, data will be retrieved without
-     * any deserialization.
+     * @var string|bool the functions used to unserialize process data returned. Defaults to false, meaning
+     *                  the data will be retrieved without any deserialization. If you want to use some more efficient
+     *                  serializer (e.g. [igbinary](http://pecl.php.net/package/igbinary)), you may configure this property with
+     *                  a string the deserialization function. If this property is set false, data will be retrieved without
+     *                  any deserialization.
      */
     public $deserializer = false;
 
@@ -34,7 +35,7 @@ class QueueProcesses
     private $_cwd = null;
 
     /**
-     * @var array|null  the environment variables or null to use the same environment as the current PHP process
+     * @var array|null the environment variables or null to use the same environment as the current PHP process
      */
     private $_env = null;
 
@@ -60,13 +61,15 @@ class QueueProcesses
     private $_pool = [];
 
     /**
-     * Processes completed
+     * Processes completed.
+     *
      * @var int
      */
     private $_completed = 0;
 
     /**
-     * Amount running processes
+     * Amount running processes.
+     *
      * @var int
      */
     private $_running = 0;
@@ -77,7 +80,8 @@ class QueueProcesses
     private $_errors = [];
 
     /**
-     * Length pool
+     * Length pool.
+     *
      * @var int
      */
     private $_length = 0;
@@ -85,15 +89,15 @@ class QueueProcesses
     /**
      * Constructor.
      *
-     * @param string|null $cwd The working directory or null to use the working dir of the current PHP process
-     * @param array|null $env The environment variables or null to use the same environment as the current PHP process
-     * @param string|null $input The input
+     * @param string|null    $cwd     The working directory or null to use the working dir of the current PHP process
+     * @param array|null     $env     The environment variables or null to use the same environment as the current PHP process
+     * @param string|null    $input   The input
      * @param int|float|null $timeout The timeout in seconds or null to disable
-     * @param array $options An array of options for proc_open
+     * @param array          $options An array of options for proc_open
      *
      * @throws RuntimeException When proc_open is not installed
      */
-    public function __construct($cwd = null, array $env = null, $input = null, $timeout = 60, array $options = array())
+    public function __construct($cwd = null, array $env = null, $input = null, $timeout = 60, array $options = [])
     {
         $this->_cwd = $cwd;
         $this->_env = $env;
@@ -103,7 +107,7 @@ class QueueProcesses
     }
 
     /**
-     * Run all processes
+     * Run all processes.
      */
     public function run()
     {
@@ -111,7 +115,7 @@ class QueueProcesses
     }
 
     /**
-     * Wait when all process is complete
+     * Wait when all process is complete.
      */
     public function wait()
     {
@@ -124,7 +128,8 @@ class QueueProcesses
     }
 
     /**
-     * Start all process
+     * Start all process.
+     *
      * @return $this
      */
     public function start()
@@ -136,14 +141,17 @@ class QueueProcesses
                 $this->_running++;
             }
 
-            if ($this->_running === $this->limit) break;
+            if ($this->_running === $this->limit) {
+                break;
+            }
         }
 
         return $this;
     }
 
     /**
-     * Check running
+     * Check running.
+     *
      * @return bool
      */
     public function isRunning()
@@ -155,20 +163,20 @@ class QueueProcesses
             if ($container->getProcess()->isRunning()) {
                 $isRunning = true;
             }
-
         }
 
         return $isRunning;
     }
 
     /**
-     * Clear pool
+     * Clear pool.
+     *
      * @throws \ErrorException
      */
     public function clear()
     {
         if ($this->isRunning()) {
-            throw new \ErrorException("One or more process is running.");
+            throw new \ErrorException('One or more process is running.');
         }
 
         $this->_pool = [];
@@ -179,8 +187,7 @@ class QueueProcesses
      * @param $command
      * @param null $callback
      */
-    public
-    function addCommand($command, $callback = null)
+    public function addCommand($command, $callback = null)
     {
         $this->_pool[] = new ProcessContainer(
             $this->_buildProcess($command),
@@ -192,20 +199,20 @@ class QueueProcesses
 
     /**
      * @param $command
+     *
      * @return Process
      */
-    private
-    function _buildProcess($command)
+    private function _buildProcess($command)
     {
         return new Process($command, $this->_cwd, $this->_env, $this->_input, $this->_timeout, $this->_options);
     }
 
     /**
      * @param Closure $callback
+     *
      * @return Closure
      */
-    private
-    function _buildCallback($callback)
+    private function _buildCallback($callback)
     {
         $self = $this;
         $out = Process::OUT;
@@ -230,17 +237,16 @@ class QueueProcesses
     }
 
     /**
-     * Add error
+     * Add error.
+     *
      * @param $error
      */
-    protected
-    function addError($error)
+    protected function addError($error)
     {
         $this->_errors[] = $error;
     }
 
-    public
-    function processCompleted()
+    public function processCompleted()
     {
         $this->_completed++;
         $this->_running--;
@@ -251,11 +257,11 @@ class QueueProcesses
     }
 
     /**
-     * Amount processes in pool
+     * Amount processes in pool.
+     *
      * @return int
      */
-    public
-    function getLength()
+    public function getLength()
     {
         return $this->_length;
     }
@@ -263,8 +269,7 @@ class QueueProcesses
     /**
      * @param $deserializer
      */
-    public
-    function setDeserializer($deserializer)
+    public function setDeserializer($deserializer)
     {
         $this->deserializer = $deserializer;
     }
@@ -272,18 +277,16 @@ class QueueProcesses
     /**
      * @param $limit
      */
-    public
-    function setLimit($limit)
+    public function setLimit($limit)
     {
         $this->limit = $limit;
     }
 
     /**
      * @param Process $process
-     * @param null $callback
+     * @param null    $callback
      */
-    public
-    function addProcess(Process $process, $callback = null)
+    public function addProcess(Process $process, $callback = null)
     {
         $this->_pool[] = new ProcessContainer(
             $process,
@@ -294,31 +297,31 @@ class QueueProcesses
     }
 
     /**
-     * Error list
+     * Error list.
+     *
      * @return array
      */
-    public
-    function getErrors()
+    public function getErrors()
     {
         return $this->_errors;
     }
 
     /**
-     * Amount processes completed
+     * Amount processes completed.
+     *
      * @return int
      */
-    public
-    function getCompleted()
+    public function getCompleted()
     {
         return $this->_completed;
     }
 
     /**
-     * Amount processes running
+     * Amount processes running.
+     *
      * @return int
      */
-    public
-    function getRunning()
+    public function getRunning()
     {
         return $this->_running;
     }

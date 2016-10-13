@@ -6,7 +6,6 @@ use Symfony\Component\Process\PhpProcess;
 
 class QueueProcessesTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testPoolInfo()
     {
         $queue = new QueueProcesses();
@@ -30,7 +29,6 @@ class QueueProcessesTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, $queue->getCompleted());
         $this->assertFalse($queue->isRunning());
-
     }
 
     public function testProcessClear()
@@ -96,6 +94,6 @@ class QueueProcessesTest extends \PHPUnit_Framework_TestCase
 
         $queue->run();
 
-        $this->assertSame('foo' . PHP_EOL . 'bar' . PHP_EOL, $data);
+        $this->assertSame('foo'.PHP_EOL.'bar'.PHP_EOL, $data);
     }
 }
