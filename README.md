@@ -1,4 +1,4 @@
-# The Queue Processes
+# The Queue of Processes
 [![Build Status](https://img.shields.io/travis/iRipVanWinkle/queue-processes/master.svg?style=flat-square)](https://travis-ci.org/iRipVanWinkle/queue-processes) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/iRipVanWinkle/queue-processes/master/LICENSE) [![Yii2](https://img.shields.io/badge/Powered_by-Yii_Framework-green.svg?style=flat-square)](http://www.yiiframework.com/)
 
 The queue for symfony/process
